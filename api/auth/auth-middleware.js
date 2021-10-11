@@ -11,7 +11,7 @@ const checkPayload = (req, res, next) => {
     if(!username || !password) {
       res.status(404).json({message: 'username and password required'})
     } else {
-      req.username = username,
+      req.username = username
       req.password = password
       next()
     }
@@ -29,7 +29,7 @@ const uniqueUsername = async(req, res, next) => {
     if(!existingUsername.length) {
       next()  
     } else {
-      next({status: 422, message: 'username taken'})
+      next({status: 401, message: 'username taken'})
     }
   } catch(err) {
     next(err)
