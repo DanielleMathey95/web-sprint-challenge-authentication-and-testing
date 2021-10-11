@@ -25,7 +25,7 @@ const checkPayload = (req, res, next) => {
 
 const uniqueUsername = async(req, res, next) => {
   try {
-    const existingUsername = await Users.getByUsername(req.body.username)
+    const existingUsername = await Users.findByUsername(req.body.username)
     if(existingUsername) {
       next({status: 400, message: 'username taken'})
     } else {
@@ -41,7 +41,7 @@ const uniqueUsername = async(req, res, next) => {
 
 const checkLoginPayload = async(req, res, next) => {
   try {
-    const user = await Users.getByUsername(req.body.username)
+    const user = await Users.findByUsername(req.body.username)
     const password = await Users.validatePassword(req.body.password)
     if(!user || !password) {
       next({ status: 400, message: 'invalid credentials'})
