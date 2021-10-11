@@ -25,11 +25,11 @@ const checkPayload = (req, res, next) => {
 
 const uniqueUsername = async(req, res, next) => {
   try {
-    const existingUsername = await Users.findByUsername(req.body.username)
-    if(existingUsername) {
-      next({status: 400, message: 'username taken'})
+    const existingUsername = await Users.findByUsername({username: req.body.username})
+    if(!existingUsername.length) {
+      next()  
     } else {
-      next()
+      next({status: 422, message: 'username taken'})
     }
   } catch(err) {
     next(err)
@@ -41,7 +41,7 @@ const uniqueUsername = async(req, res, next) => {
 
 const checkLoginPayload = async(req, res, next) => {
   try {
-    const user = await Users.findByUsername(req.body.username)
+    const user = await Users.findByUsername(req.body.username) //need to decode hash for password comparison OR need to convert the input password to hash before calling db
     const password = await Users.validatePassword(req.body.password)
     if(!user || !password) {
       next({ status: 400, message: 'invalid credentials'})
